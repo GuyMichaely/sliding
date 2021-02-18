@@ -1,2 +1,2 @@
 main:
-	gcc main.c -o slide -lncurses -Dconst=
+	gcc slide.c -o slide -lncurses -Dconst=
