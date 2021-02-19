@@ -5,17 +5,16 @@
 #include <time.h>
 #include <unistd.h>
 
-int counter;
-void handle_winch(int sig) {
-	refresh();
+#include "structs.h"
+#include "drawing.h"
+
+void resize(Game *game) {
 	clear();
-	mvprintw(0, 0, "%i", ++counter);
-	refresh();
+	initLines(game);
 }
 
 int main(int argc, char *argv[]) {
-	bool needToSeed = true; // for seeding srand()
-	long int seed;
+	long int seed = 0;
 	
 	// cmd line parsing
 	opterr = 0;
@@ -28,7 +27,6 @@ int main(int argc, char *argv[]) {
 		switch (c) {
 			case 's':
 				seed = atol(optarg);
-				needToSeed = false;
 				break;
 			case ':':
 				fprintf(stderr, "Seed option must take value\n");
@@ -41,39 +39,41 @@ int main(int argc, char *argv[]) {
 	// can supply either both dimension arguments or none
 	// dimensions must both be >= 2
 	argc -= optind;
-	int rows, cols;
+	Game game;
 	if (argc == 0) {
 		// no dimensions supplied
-		cols = rows = 4;
+		game.cols = game.rows = 4;
 	}
 	else if (argc == 2) {
 		// both dimensions supplied
-		rows = atoi(argv[optind]);
-		cols = atoi(argv[optind + 1]);
-		if (rows < 2 || cols < 2) {
+		game.rows = atoi(argv[optind]);
+		game.cols = atoi(argv[optind + 1]);
+		if (game.rows < 2 || game.cols < 2) {
 			fprintf(stderr, "The game breaks when either dimension has a value less than 2\n");
 			exit(1);
 		}
 	}
 	else {
+		// bad arguments supplied
 		printf("Usage: ./npuzzle [columns rows] [-s seed]\nseed must be a long int\n");
 		exit(1);
 	}
-	if (needToSeed) {
+	if (seed == 0) {
 		seed = time(NULL);
 	}
 	srand(seed);
+	
 	// ncurses initialization 
 	initscr();
 	noecho();
 	raw();
 	keypad(stdscr, TRUE);	
-	mvprintw(0, 0, "0");
-	mvprintw(1, 0, "%i %i %li", rows, cols, seed);
+	initLines(&game);
+
 	while (1) {
 		int c = getch();
 		if (c == KEY_RESIZE) {
-			handle_winch(0);
+			resize(&game);
 		}
 		else if (c == 'q' || c == 'Q') {
 			endwin();
