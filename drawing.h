@@ -32,7 +32,7 @@ void initLines(Game *game) {
 
 	// vertical lines
 	calcLines(game->verticalLineIndices, COLS, game->cols);
-	for (int x = 0; x < game->cols; x++) {
+	for (int x = 0; x < game->cols - 1; x++) {
 		mvvline(0, game->verticalLineIndices[x], '|', LINES);
 	}
 
@@ -74,5 +74,5 @@ void drawTiles(Game *game) {
 void redraw(Game *game) {
 	clear();
 	initLines(game);
-	drawTiles(game);
+	// drawTiles(game);
 }
