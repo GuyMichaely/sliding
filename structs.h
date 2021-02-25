@@ -7,6 +7,6 @@ typedef struct Game {
 	 // does not store index of empty tile
 	int *tileIndices;
 
-	int *verticalLineIndices;
-	int *horizontalLineIndices;
+	int *verticalLines;
+	int *horizontalLines;
 } Game;

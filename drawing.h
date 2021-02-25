@@ -25,21 +25,21 @@ void calcLines(int lineCoords[], int dimLength, int dimUnits) {
 // draw the tile seperation lines onscreen
 void initLines(Game *game) {
 	// horizontal lines
-	calcLines(game->horizontalLineIndices, LINES, game->rows);
+	calcLines(game->horizontalLines, LINES, game->rows);
 	for (int y = 0; y < game->rows - 1; y++) {
-		mvhline(game->horizontalLineIndices[y], 0, '-', COLS);
+		mvhline(game->horizontalLines[y], 0, '-', COLS);
 	}
 
 	// vertical lines
-	calcLines(game->verticalLineIndices, COLS, game->cols);
+	calcLines(game->verticalLines, COLS, game->cols);
 	for (int x = 0; x < game->cols - 1; x++) {
-		mvvline(0, game->verticalLineIndices[x], '|', LINES);
+		mvvline(0, game->verticalLines[x], '|', LINES);
 	}
 
 	// intersections
 	for (int y = 0; y < game->rows - 1; y++) {
 		for (int x = 0; x < game->cols - 1; x++) {
-			mvprintw(game->horizontalLineIndices[y], game->verticalLineIndices[x], "+");
+			mvprintw(game->horizontalLines[y], game->verticalLines[x], "+");
 		}
 	}
 }
@@ -54,12 +54,41 @@ int intLength(int x) {
 	return length;
 }
 
+// given line coordinates and tile index, calculate midpoint
+void calcBorders(int coordinates[], int index, int maxIndex, int *start, int *end, int maxCoord) {
+	if (index == 0) {
+		*start = 0;
+		*end = coordinates[0];
+	}
+	else {
+		*start = coordinates[index - 1];
+		if (index == maxIndex) {
+			*end = maxCoord;
+		}
+		else {
+			*end = coordinates[index];
+		}
+	}
+}
+
 void drawTile(Game *game, int index, int tile) {
 	// (y, x) index of tile
 	int y = index / game->cols;
 	int x = index % game->cols;
 
-	
+	// calculate onscreen coordinate
+	// by finding midpoint between the lines
+	int start, end;
+
+	// calc y midpoint
+	calcBorders(game->horizontalLines, y, game->rows - 1, &start, &end, LINES);
+	int midy = (start + end) / 2;
+
+	// calc x midpoint
+	calcBorders(game->verticalLines, x, game->cols - 1, &start, &end, COLS);
+	int midx = (start + end - intLength(tile)) / 2; // -intLength(tile) to center the text
+
+	mvprintw(midy, midx, "%i", tile);
 }
 
 // draw the tiles onscreen

@@ -13,6 +13,23 @@ void resize(Game *game) {
 	redraw(game);
 }
 
+// initialize game struct
+void gameInit(Game *game) {
+	// game->data initiazlization
+	game->numTiles = game->rows * game->cols;
+	int tileIndices[game->numTiles];
+	game->tileIndices = tileIndices;
+	for (int i = 0; i < game->numTiles; i++) {
+		game->tileIndices[i - 1] = i;
+	}
+
+	// fuck malloc, all my homies use VLAs
+	int verticalLines[game->cols - 1];
+	game->verticalLines = verticalLines;
+	int horizontalLines[game->rows - 1];
+	game->horizontalLines = horizontalLines;
+}
+
 int main(int argc, char *argv[]) {
 	long int seed = 0;
 	
@@ -69,20 +86,8 @@ int main(int argc, char *argv[]) {
 	raw();
 	keypad(stdscr, TRUE);	
 
-	// game data initiazlization
-	game.numTiles = game.rows * game.cols;
-	int tileIndices[game.numTiles];
-	game.tileIndices = tileIndices;
-	for (int i = 0; i < game.numTiles; i++) {
-		game.tileIndices[i - 1] = i;
-	}
-
-	// fuck malloc, all my homies use VLAs
-	int verticalLineIndices[game.cols - 1];
-	game.verticalLineIndices = verticalLineIndices;
-	int horizontalLineIndices[game.rows - 1];
-	game.horizontalLineIndices = horizontalLineIndices;
-
+	// init game data and draw screen for the first time
+	gameInit(&game);
 	redraw(&game);
 
 	while (1) {
