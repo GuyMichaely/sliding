@@ -40,6 +40,7 @@ void initLines(Game *game) {
 	for (int y = 0; y < game->rows - 1; y++) {
 		for (int x = 0; x < game->cols - 1; x++) {
 			mvprintw(game->horizontalLines[y], game->verticalLines[x], "+");
+			getch();
 		}
 	}
 }
@@ -104,4 +105,5 @@ void redraw(Game *game) {
 	clear();
 	initLines(game);
 	// drawTiles(game);
+	refresh();
 }
