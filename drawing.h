@@ -25,23 +25,54 @@ void calcLines(int lineCoords[], int dimLength, int dimUnits) {
 // draw the tile seperation lines onscreen
 void initLines(Game *game) {
 	// horizontal lines
-	int rowLines[game->rows];
-	calcLines(rowLines, LINES, game->rows);
+	calcLines(game->horizontalLineIndices, LINES, game->rows);
 	for (int y = 0; y < game->rows - 1; y++) {
-		mvhline(rowLines[y], 0, '-', COLS);
+		mvhline(game->horizontalLineIndices[y], 0, '-', COLS);
 	}
 
 	// vertical lines
-	int colLines[game->cols];
-	calcLines(colLines, COLS, game->cols);
+	calcLines(game->verticalLineIndices, COLS, game->cols);
 	for (int x = 0; x < game->cols; x++) {
-		mvvline(0, colLines[x], '|', LINES);
+		mvvline(0, game->verticalLineIndices[x], '|', LINES);
 	}
 
 	// intersections
 	for (int y = 0; y < game->rows - 1; y++) {
 		for (int x = 0; x < game->cols - 1; x++) {
-			mvprintw(rowLines[y], colLines[x], "+");
+			mvprintw(game->horizontalLineIndices[y], game->verticalLineIndices[x], "+");
 		}
 	}
+}
+
+// dumb simple int length function used for drawTiles
+// int must be positive
+int intLength(int x) {
+	int length = 1;
+	for (int cmp = 10; x >= cmp; cmp *= 10) {
+		length++;
+	}
+	return length;
+}
+
+void drawTile(Game *game, int index, int tile) {
+	// (y, x) index of tile
+	int y = index / game->cols;
+	int x = index % game->cols;
+
+	
+}
+
+// draw the tiles onscreen
+void drawTiles(Game *game) {
+	// loop through all tile values
+	// use game->tileIndices to know where to draw the tile
+	for (int tile = 1; tile < game->numTiles; tile++) {
+		drawTile(game, game->tileIndices[tile - 1], tile);
+	}
+}
+
+void redraw(Game *game) {
+	clear();
+	initLines(game);
+	drawTiles(game);
 }

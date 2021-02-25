@@ -10,7 +10,7 @@
 
 void resize(Game *game) {
 	clear();
-	initLines(game);
+	redraw(game);
 }
 
 int main(int argc, char *argv[]) {
@@ -68,7 +68,22 @@ int main(int argc, char *argv[]) {
 	noecho();
 	raw();
 	keypad(stdscr, TRUE);	
-	initLines(&game);
+
+	// game data initiazlization
+	game.numTiles = game.rows * game.cols;
+	int tileIndices[game.numTiles];
+	game.tileIndices = tileIndices;
+	for (int i = 0; i < game.numTiles; i++) {
+		game.tileIndices[i - 1] = i;
+	}
+
+	// fuck malloc, all my homies use VLAs
+	int verticalLineIndices[game.cols - 1];
+	game.verticalLineIndices = verticalLineIndices;
+	int horizontalLineIndices[game.rows - 1];
+	game.horizontalLineIndices = horizontalLineIndices;
+
+	redraw(&game);
 
 	while (1) {
 		int c = getch();
