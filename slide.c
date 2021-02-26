@@ -8,13 +8,9 @@
 #include "structs.h"
 #include "drawing.h"
 
-void resize(Game *game) {
-	redraw(game);
-}
-
 // initialize game struct
 void gameInit(Game *game) {
-	// game->data initiazlization
+	// game data initiazlization
 	game->numTiles = game->rows * game->cols;
 	int tileIndices[game->numTiles - 1]; // subtract 1 for not storing index of 0
 	game->tileIndices = tileIndices;
