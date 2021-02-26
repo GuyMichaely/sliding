@@ -26,6 +26,8 @@ void calcLines(int lineCoords[], int dimLength, int dimUnits) {
 void initLines(Game *game) {
 	// horizontal lines
 	calcLines(game->horizontalLines, LINES, game->rows);
+	// for (int i = 0; i < game->rows - 1; i++) {
+	// }
 	for (int y = 0; y < game->rows - 1; y++) {
 		mvhline(game->horizontalLines[y], 0, '-', COLS);
 	}
