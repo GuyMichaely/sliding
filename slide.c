@@ -12,8 +12,8 @@
 void gameInit(Game *game) {
 	// game data initiazlization
 	game->numTiles = game->rows * game->cols;
-	int tileIndices[game->numTiles - 1]; // subtract 1 for not storing index of 0
-	game->tileIndices = tileIndices;
+	/* int tileIndices[game->numTiles - 1]; // subtract 1 for not storing index of 0 */
+	game->tileIndices = malloc(sizeof(int) * game->numTiles - 1);
 	for (int i = 0; i < game->numTiles; i++) {
 		game->tileIndices[i - 1] = i;
 	}

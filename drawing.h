@@ -105,6 +105,6 @@ void drawTiles(Game *game) {
 void redraw(Game *game) {
 	clear();
 	initLines(game);
-	// drawTiles(game);
+	drawTiles(game);
 	refresh();
 }
