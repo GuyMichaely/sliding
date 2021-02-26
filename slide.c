@@ -27,6 +27,8 @@ void gameInit(Game *game) {
 	game->verticalLines = verticalLines;
 	int horizontalLines[game->rows - 1];
 	game->horizontalLines = horizontalLines;
+	/* game->verticalLines = malloc(sizeof(int) * game->rows - 1); */
+	/* game->verticalLines = malloc(sizeof(int) * game->rows - 1); */
 }
 
 int main(int argc, char *argv[]) {

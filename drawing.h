@@ -26,11 +26,11 @@ void calcLines(int lineCoords[], int dimLength, int dimUnits) {
 void initLines(Game *game) {
 	// horizontal lines
 	calcLines(game->horizontalLines, LINES, game->rows);
-	// for (int i = 0; i < game->rows - 1; i++) {
-	// }
+	int i=0;
 	for (int y = 0; y < game->rows - 1; y++) {
 		mvhline(game->horizontalLines[y], 0, '-', COLS);
 	}
+	// mvprintw(0, 0, "%i", game->horizontalLines[0]);
 
 	// vertical lines
 	calcLines(game->verticalLines, COLS, game->cols);
@@ -42,7 +42,7 @@ void initLines(Game *game) {
 	for (int y = 0; y < game->rows - 1; y++) {
 		for (int x = 0; x < game->cols - 1; x++) {
 			mvprintw(game->horizontalLines[y], game->verticalLines[x], "+");
-			getch();
+			// getch();
 		}
 	}
 }
