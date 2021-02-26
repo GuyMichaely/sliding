@@ -10,21 +10,52 @@
 
 // initialize game struct
 void gameInit(Game *game) {
-	// game data initiazlization
+	game->emptyy = game->emptyx = 0;
 	game->numTiles = game->rows * game->cols;
 	/* int tileIndices[game->numTiles - 1]; // subtract 1 for not storing index of 0 */
-	game->tileIndices = malloc(sizeof(int) * game->numTiles - 1);
+	game->tiles = malloc(sizeof(int) * game->numTiles);
 	for (int i = 0; i < game->numTiles; i++) {
-		game->tileIndices[i - 1] = i;
+		game->tiles[i] = i;
 	}
 
-	// fuck malloc, all my homies use VLAs
 	/* int verticalLines[game->cols - 1]; */
 	/* game->verticalLines = verticalLines; */
 	/* int horizontalLines[game->rows - 1]; */
 	/* game->horizontalLines = horizontalLines; */
 	game->verticalLines = malloc(sizeof(int) * game->rows - 1);
-	game->verticalLines = malloc(sizeof(int) * game->rows - 1);
+	game->horizontalLines = malloc(sizeof(int) * game->cols - 1);
+}
+
+// determine what direction an input char c is
+bool isQuit(int c) {
+	return c == 'q' || c == 'Q';
+}
+bool isLeft(int c) {
+	return c == 'h' || c == 'H' || c == KEY_LEFT;
+}
+bool isDown(int c) {
+	return c == 'j' || c == 'J' || c == KEY_DOWN;
+}
+bool isUp(int c) {
+	return c == 'k' || c == 'K' || c == KEY_UP;
+}
+bool isRight(int c) {
+	return c == 'l' || c == 'L' || c == KEY_RIGHT;
+}
+
+// attempt to move a tile in to the empty space by (dy, dx)
+// is designed to only accept (-1, 0), (1, 0), (0, 1), (0, -1)
+void moveTile(Game *game, int dy, int dx) {
+	if (game->emptyy - dy < 0 || game->emptyy - dy >= game->rows){
+		return;
+	}
+	if (game->emptyx - dx < 0 || game->emptyx - dx >= game->cols){
+		return;
+	}
+	
+
+	game->emptyy -= dy;
+	game->emptyx -= dx;
 }
 
 int main(int argc, char *argv[]) {
@@ -87,15 +118,25 @@ int main(int argc, char *argv[]) {
 	gameInit(&game);
 	redraw(&game);
 
-	while (1) {
-		int c = getch();
+	while (!isQuit(c = getch())) {
 		if (c == KEY_RESIZE) {
 			redraw(&game);
 		}
-		else if (c == 'q' || c == 'Q') {
-			endwin();
-			return 0;
+		else if (isLeft(c)) {
+			moveTile(&game, 0, -1);
 		}
+		else if (isDown(c)) {
+			moveTile(&game, -1, 0);
+		}
+		else if (isUp(c)) {
+			moveTile(&game, 1, 0);
+		}
+		else if (isRight(c)) {
+			moveTile(&game, 0, 1);
+		}
+
+		redraw(&game);
 	}
 	endwin();
+	return 0;
 }

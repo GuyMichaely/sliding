@@ -95,10 +95,13 @@ void drawTile(Game *game, int index, int tile) {
 
 // draw the tiles onscreen
 void drawTiles(Game *game) {
-	// loop through all tile values
-	// use game->tileIndices to know where to draw the tile
-	for (int tile = 1; tile < game->numTiles; tile++) {
-		drawTile(game, game->tileIndices[tile - 1], tile);
+	// calculate index of empty tile so we can skip over it
+	const int empty = game->emptyy * game->cols + game->emptyx;
+	for (int i = 0; i < empty; i++) {
+		drawTile(game, i, game->tiles[i]);
+	}
+	for (int i = empty + 1; i < game->numTiles; i++) {
+		drawTile(game, i, game->tiles[i]);
 	}
 }
 
