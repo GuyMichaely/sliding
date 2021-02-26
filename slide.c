@@ -19,12 +19,12 @@ void gameInit(Game *game) {
 	}
 
 	// fuck malloc, all my homies use VLAs
-	int verticalLines[game->cols - 1];
-	game->verticalLines = verticalLines;
-	int horizontalLines[game->rows - 1];
-	game->horizontalLines = horizontalLines;
-	/* game->verticalLines = malloc(sizeof(int) * game->rows - 1); */
-	/* game->verticalLines = malloc(sizeof(int) * game->rows - 1); */
+	/* int verticalLines[game->cols - 1]; */
+	/* game->verticalLines = verticalLines; */
+	/* int horizontalLines[game->rows - 1]; */
+	/* game->horizontalLines = horizontalLines; */
+	game->verticalLines = malloc(sizeof(int) * game->rows - 1);
+	game->verticalLines = malloc(sizeof(int) * game->rows - 1);
 }
 
 int main(int argc, char *argv[]) {
@@ -90,7 +90,7 @@ int main(int argc, char *argv[]) {
 	while (1) {
 		int c = getch();
 		if (c == KEY_RESIZE) {
-			resize(&game);
+			redraw(&game);
 		}
 		else if (c == 'q' || c == 'Q') {
 			endwin();
