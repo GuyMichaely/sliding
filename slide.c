@@ -14,7 +14,7 @@ void gameInit(Game *game) {
 	game->numTiles = game->rows * game->cols;
 	/* int tileIndices[game->numTiles - 1]; // subtract 1 for not storing index of 0 */
 	game->tiles = malloc(sizeof(int) * game->numTiles);
-	for (int i = 0; i < game->numTiles; i++) {
+	for (int i = 1; i < game->numTiles; i++) {
 		game->tiles[i] = i;
 	}
 
@@ -46,6 +46,7 @@ bool isRight(int c) {
 // attempt to move a tile in to the empty space by (dy, dx)
 // is designed to only accept (-1, 0), (1, 0), (0, 1), (0, -1)
 void moveTile(Game *game, int dy, int dx) {
+	// if movement would result in out of bounds
 	if (game->emptyy - dy < 0 || game->emptyy - dy >= game->rows){
 		return;
 	}
@@ -53,7 +54,8 @@ void moveTile(Game *game, int dy, int dx) {
 		return;
 	}
 	
-
+	const int emptyIndex = game->emptyy * game->rows + game->emptyx;
+	game->tiles[emptyIndex] = game->tiles[(game->emptyy - dy) * game->rows + (game->emptyx - dx)];
 	game->emptyy -= dy;
 	game->emptyx -= dx;
 }
@@ -112,6 +114,7 @@ int main(int argc, char *argv[]) {
 	initscr();
 	noecho();
 	raw();
+	curs_set(0);
 	keypad(stdscr, TRUE);	
 
 	// init game data and draw screen for the first time
@@ -126,10 +129,10 @@ int main(int argc, char *argv[]) {
 			moveTile(&game, 0, -1);
 		}
 		else if (isDown(c)) {
-			moveTile(&game, -1, 0);
+			moveTile(&game, 1, 0);
 		}
 		else if (isUp(c)) {
-			moveTile(&game, 1, 0);
+			moveTile(&game, -1, 0);
 		}
 		else if (isRight(c)) {
 			moveTile(&game, 0, 1);

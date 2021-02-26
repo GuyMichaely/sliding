@@ -95,7 +95,7 @@ void drawTile(Game *game, int index, int tile) {
 
 // draw the tiles onscreen
 void drawTiles(Game *game) {
-	// calculate index of empty tile so we can skip over it
+	// calculate index of empty tile and skip over it
 	const int empty = game->emptyy * game->cols + game->emptyx;
 	for (int i = 0; i < empty; i++) {
 		drawTile(game, i, game->tiles[i]);

@@ -5,7 +5,11 @@ typedef struct Game {
 	int numTiles;
 	int emptyy; // y index of empty tile
 	int emptyx; // x index of empty til
-	int *tiles; // array of tile values
+	
+	// array of tile values
+	// the value at the index occupied by the empty tile is not updated
+	int *tiles;
+
 	int *verticalLines;
 	int *horizontalLines;
 } Game;
